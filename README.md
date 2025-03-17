@@ -16,17 +16,15 @@ To add it on to your glance config, you'd want something like the following
 services:
   glance:
     ...
-    links:
-        - "tailscale:tailscale"
 
   tailscale:
     image: ghcr.io/fifty-six/glance.tailscale
-    env-file: .env
+    env_file: .env
     
 ```
 with `TS_AUTH_KEY` in a `.env` file.
 
-You can then use the url `https://tailscale/` as the extension url with a config like
+You can then use the url `https://tailscale/` (or whatever name, given they're both in hte same compose file) as the extension url with a config like
 ```yaml
         - type: extension
           url: http://tailscale:8000
