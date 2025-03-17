@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+    <body class="vcs-initialized">
+        <style>
+            .device {
+                justify-content: space-between;
+            }
+            
+            .status-container {
+                gap: 0.5rem;
+                width: 10em;
+            }
+
+            .device:hover .os  {
+                transform: translateY(-1.5em);
+                opacity: 0;
+            }
+
+            .device:hover .ip {
+                transform: translateY(1.5em);
+                opacity: 1;
+            }
+
+            .os {
+                transition: transform 0.5s, opacity .5s;
+            }
+
+            .ip {
+                transition: transform 0.5s, opacity 1s;
+                opacity: 0;
+                position: absolute;
+            }
+
+            .hostname {
+                color: var(--color-primary)
+            }
+
+            .hostname.dead {
+                color: var(--color-text-subdued)
+            }
+
+            .update-icon {
+                margin-left: -0.3em;
+            }
+        </style>
+
+
+        <ul class="list list-gap-10 collapsible-container" data-collapse-after="4">
+            {% for device in devices %}
+                <div class="flex items-center gap-12 device">
+                    <li class="device">
+                        <div class="flex items-center gap-10">
+                            <span class="ip">
+                                {{ device.ipv4 }}
+                            </span>
+                            <span class="size-h4 block text-truncate hostname {{ "dead" if not device.alive }}">
+                                {{ device.machine_name }}
+                            </span>
+
+                            {% if show_update and device.update_available %}
+                            <div class="monitor-site-status-icon-compact update-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-up-circle">
+                                    <circle cx="12" cy="12" r="10"/>
+                                    <polyline points="16 12 12 8 8 12"/>
+                                    <line x1="12" y1="16" x2="12" y2="8"/>
+                                </svg>
+                            </div>
+                            {% endif %}
+                        </div>
+
+                        <ul class="list-horizontal-text">
+                            <li class="os">{{ device.os }}</li>
+                        </ul>
+                    </li>
+
+                    <div class="flex items-center status-container">
+                        {% if show_status %}
+                            <div class="monitor-site-status-icon-compact">
+                                <svg fill={{ 'var(--color-positive)' if device.alive else 'var(--color-negative)' }} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                                    <circle cx="10" cy="10" r="04" />
+                                </svg>
+                            </div>
+
+                            {% if device.alive %}
+                            <span class="status">
+                                Connected
+                            <span>
+                            {% else %}
+                            <span class="status color-negative">
+                                {{ device.last_seen_fmt }}
+                            </span>
+                            {% endif %}
+                        {% endif %}
+                    </div>
+                </div>
+            {% endfor %}
+        </ul>
+    </body>
+</html>
