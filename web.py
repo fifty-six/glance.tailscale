@@ -66,7 +66,7 @@ class Query(BaseModel):
     show_update: bool | None = False
     show_status: bool | None = True
 
-@app.route("/tailscale/")
+@app.route("/")
 @validate_querystring(Query)
 async def tailscale(query_args: Query) -> quart.typing.ResponseTypes:
     req = await ts_client.get("https://api.tailscale.com/api/v2/tailnet/-/devices")
